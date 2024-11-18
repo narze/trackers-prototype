@@ -2,13 +2,13 @@
 	import { entries } from '$lib/stores/entries';
 	import EntryItem from './EntryItem.svelte';
 	import HabitGraph from './HabitGraph.svelte';
-	
-	export let habit;
-	
-	let note = '';
-	let showGraph = false;
-	let viewType = 'daily';
-	
+
+	let { habit } = $props();
+
+	let note = $state('');
+	let showGraph = $state(false);
+	let viewType = $state('daily');
+
 	function addEntry(value) {
 		entries.addEntry({
 			habitId: habit.id,
@@ -18,9 +18,9 @@
 		note = '';
 	}
 
-	$: habitEntries = $entries
+	let habitEntries = $derived($entries
 		.filter(entry => entry.habitId === habit.id)
-		.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+		.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
 </script>
 
 <div class="card bg-base-100 shadow-xl" style="border-top: 4px solid {habit.color}">
@@ -28,15 +28,15 @@
 		<div class="flex justify-between items-center">
 			<h2 class="card-title" style="color: {habit.color}">{habit.name}</h2>
 			<div class="flex gap-2">
-				<button 
-					class="btn btn-sm btn-ghost" 
-					on:click={() => showGraph = !showGraph}
+				<button
+					class="btn btn-sm btn-ghost"
+					onclick={() => showGraph = !showGraph}
 				>
 					{showGraph ? '📊' : '📈'}
 				</button>
 				{#if showGraph}
-					<select 
-						bind:value={viewType} 
+					<select
+						bind:value={viewType}
 						class="select select-sm select-bordered"
 					>
 						<option value="daily">Daily</option>
@@ -45,7 +45,7 @@
 				{/if}
 			</div>
 		</div>
-		
+
 		{#if showGraph}
 			<HabitGraph {habit} {habitEntries} {viewType} />
 		{:else}
@@ -55,7 +55,7 @@
 						<div class="flex gap-2">
 							{#each Array(5) as _, i}
 								<button
-									on:click={() => addEntry(i + 1)}
+									onclick={() => addEntry(i + 1)}
 									class="btn flex-1"
 									style="background-color: {habit.color}; color: white; border: none;"
 								>
@@ -65,14 +65,14 @@
 						</div>
 					{:else}
 						<button
-							on:click={() => addEntry('time')}
+							onclick={() => addEntry('time')}
 							class="btn w-full"
 							style="background-color: {habit.color}; color: white; border: none;"
 						>
 							Log Time
 						</button>
 					{/if}
-					
+
 					<input
 						type="text"
 						bind:value={note}

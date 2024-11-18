@@ -1,13 +1,11 @@
 <script>
     import { entries } from '$lib/stores/entries';
 
-    export let entry;
-    export let habitType;
-    export let habitColor;
-    
-    let isEditing = false;
-    let editedNote = entry.note || '';
-    let editedValue = entry.value;
+    let { entry, habitType, habitColor } = $props();
+
+    let isEditing = $state(false);
+    let editedNote = $state(entry.note || '');
+    let editedValue = $state(entry.value);
 
     function handleEdit() {
         entries.updateEntry(entry.id, {
@@ -28,7 +26,7 @@
     {#if isEditing}
         <div class="flex items-center gap-2">
             {#if habitType === 'scale'}
-                <select 
+                <select
                     bind:value={editedValue}
                     class="select select-bordered select-sm"
                 >
@@ -43,29 +41,29 @@
                 placeholder="Add note"
                 class="input input-bordered input-sm flex-1"
             />
-            <button 
+            <button
                 class="btn btn-sm btn-primary"
-                on:click={handleEdit}
+                onclick={handleEdit}
             >
                 Save
             </button>
-            <button 
+            <button
                 class="btn btn-sm btn-ghost"
-                on:click={() => isEditing = false}
+                onclick={() => isEditing = false}
             >
                 Cancel
             </button>
         </div>
     {:else}
         <div class="flex items-center gap-2">
-            <span 
+            <span
                 class="font-bold min-w-[3rem]"
                 style="color: {habitColor}"
             >
                 {#if habitType === 'scale'}
                     {entry.value}/5
                 {:else}
-                    {new Date(entry.timestamp).toLocaleTimeString()}
+                    ⏱️
                 {/if}
             </span>
             {#if entry.note}
@@ -73,19 +71,19 @@
                     {entry.note}
                 </span>
             {/if}
-            <span class="text-sm text-base-content/50 min-w-[6rem]">
-                {new Date(entry.timestamp).toLocaleDateString()}
+            <span class="text-sm text-base-content/50 min-w-[12rem] flex-1">
+                {new Date(entry.timestamp).toLocaleString()}
             </span>
             <div class="flex gap-1">
-                <button 
+                <button
                     class="btn btn-ghost btn-xs"
-                    on:click={() => isEditing = true}
+                    onclick={() => isEditing = true}
                 >
                     ✏️
                 </button>
-                <button 
+                <button
                     class="btn btn-ghost btn-xs"
-                    on:click={handleDelete}
+                    onclick={handleDelete}
                 >
                     🗑️
                 </button>

@@ -6,16 +6,16 @@
 </script>
 
 <svelte:head>
-	<title>Habit Tracker</title>
+	<title>Trackers</title>
 	<meta name="description" content="Track your daily habits and activities" />
 </svelte:head>
 
 <main>
-	<h1 class="text-4xl font-bold text-primary mb-8 text-center">Habit Tracker</h1>
-	
+	<h1 class="text-4xl font-bold text-primary mb-8 text-center">Trackers Prototype</h1>
+
 	<AddHabit />
-	
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+
+	<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mt-8">
 		{#each $habits as habit (habit.id)}
 			<HabitCard {habit} />
 		{/each}
